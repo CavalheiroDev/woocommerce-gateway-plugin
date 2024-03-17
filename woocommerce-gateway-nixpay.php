@@ -39,6 +39,8 @@ class WC_NixPay_Payments
         // NixPay Payments gateway class.
         add_action('plugins_loaded', array(__CLASS__, 'includes'), 0);
 
+        add_action('plugins_loaded', array(__CLASS__, 'create_subscriber_premium_role'), 1);
+
         // Make the NixPay Payments gateway available to WC.
         add_filter('woocommerce_payment_gateways', array(__CLASS__, 'add_gateway'));
 
@@ -49,9 +51,19 @@ class WC_NixPay_Payments
 
     }
 
+    public static function create_subscriber_premium_role(): void
+    {
+        $role = get_role('subscriber_premium');
+        if (!$role) {
+            add_role('subscriber_premium', 'Assinante Premium', [
+                'read' => true,
+            ]);
+        }
+    }
+
     public static function add_custom_endpoints()
     {
-        require_once(plugin_dir_path(__FILE__) .'includes/endpoints/CreditWebhookCallback.php');
+        require_once(plugin_dir_path(__FILE__) . 'includes/endpoints/CreditWebhookCallback.php');
         $credit_webhook = new CreditWebhookCallback();
         $credit_webhook->register_routes();
 
