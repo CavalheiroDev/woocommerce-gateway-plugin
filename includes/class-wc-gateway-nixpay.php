@@ -185,7 +185,7 @@ class WC_Gateway_NixPay extends WC_Payment_Gateway
         $amount = number_format($order->get_total() * 100.0, 0, '.', '');
 
         $zip_code = str_replace('-', '', $order->get_billing_postcode());
-        $site_url = str_replace("\/", "/", home_url('/wc-api/nix-pay-credit-webhook', 'https'));
+        $site_url = str_replace("\/", "/", home_url('/wp-json/nix/v1/credit-webhook', 'https'));
 
         $payload = array(
             'merchantOrderId' => "woocommerceOrder-$order_id",
