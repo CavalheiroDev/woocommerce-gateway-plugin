@@ -85,11 +85,11 @@ class WC_Gateway_NixPay extends WC_Payment_Gateway
         $this->test_api_user = $this->get_option('test_api_user');
         $this->test_api_password = $this->get_option('test_api_password');
 
-        $this->base_url = $this->test_mode ? 'https://apigateway-qa.nexxera.com' : 'https://apigateway.nexxera.com';
+        $this->base_url = $this->test_mode == 'yes' ? 'https://apigateway-qa.nexxera.com' : 'https://apigateway.nexxera.com';
 
         $this->cadun_url = $this->base_url . '/nix/cadun/empresas/auth';
-        $this->cadun_user = $this->test_mode ? $this->test_api_user : $this->production_api_user;
-        $this->cadun_password = $this->test_mode ? $this->test_api_password : $this->production_api_password;
+        $this->cadun_user = $this->test_mode == 'yes' ? $this->test_api_user : $this->production_api_user;
+        $this->cadun_password = $this->test_mode == 'yes' ? $this->test_api_password : $this->production_api_password;
 
         $this->card_payments_url = $this->base_url . '/nix-pay/v2/Orders/CardPayments/Authorize';
 
@@ -179,6 +179,7 @@ class WC_Gateway_NixPay extends WC_Payment_Gateway
      */
     public function process_payment($order_id)
     {
+        error_log(print_r('entrou no pagamento', true));
         error_log(print_r($_POST, true));
         $order = wc_get_order($order_id);
 
@@ -262,8 +263,10 @@ class WC_Gateway_NixPay extends WC_Payment_Gateway
         error_log(print_r('' . $encoded_payload, true));
 
 
-        $this->send_card_payment($encoded_payload);
-        error_log(print_r('caiu no pay', true));
+        $response = $this->send_card_payment($encoded_payload);
+        $order->add_meta_data('installment', $payload['installments'], false);
+        $order->add_meta_data('payment_token', $response->payment->paymentToken, true);
+        $order->add_meta_data('transaction_date', date('Y-m-d') . 'T' . date('H:i:s'), false);
 
 
         if ($has_signature_category && $recurrence_product_plan) {
@@ -311,7 +314,7 @@ class WC_Gateway_NixPay extends WC_Payment_Gateway
             throw new Exception('Ocorreu um erro no processamento do seu pagamento.');
         }
 
-        return $response;
+        return $decoded_body;
 
     }
 

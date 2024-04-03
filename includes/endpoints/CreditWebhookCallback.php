@@ -13,7 +13,7 @@ class CreditWebhookCallback extends WP_REST_Controller
     public function register_routes()
     {
         register_rest_route(self::NAMESPACE, self::ENDPOINT, [
-            'methods' => WP_REST_Server::CREATABLE,
+            'methods' => 'POST',
             'callback' => [$this, 'webhook'],
             'permission_callback' => [$this, 'permission_handler'],
             'args' => []
@@ -38,9 +38,9 @@ class CreditWebhookCallback extends WP_REST_Controller
 
         $matchPattern = [
             1 => 'wc-pending',
-            2 => 'wc-completed',
+            2 => 'wc-processing',
             3 => 'wc-cancelled',
-            5 => 'wc-refunded',
+            5 => 'wc-pending',
             6 => 'wc-refunded',
             7 => 'wc-failed',
             8 => 'wc-failed',
