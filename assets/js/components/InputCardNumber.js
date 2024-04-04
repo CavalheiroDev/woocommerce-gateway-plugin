@@ -3,9 +3,7 @@ import InputHelper from "./InputHelper";
 import {useState} from '@wordpress/element';
 
 
-const InputCardNumber = ({hiddenId, inputLabelMessage, inputHelperMessage}) => {
-    const [helperVisibility, setHelperVisibility] = useState(false);
-
+const InputCardNumber = ({hiddenId, inputLabelMessage, inputHelperMessage, helperVisibility, setHelperVisibility}) => {
     const setInputCardNumberMask = (event) => {
         const cardNumber = event.target.value
             .replace(/\s+/g, "")

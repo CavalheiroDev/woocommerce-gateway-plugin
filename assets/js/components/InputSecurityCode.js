@@ -2,9 +2,7 @@ import InputLabel from "./InputLabel";
 import InputHelper from "./InputHelper";
 import {useState} from "@wordpress/element";
 
-const InputSecurityCode = () => {
-    const [helperVisibility, setHelperVisibility] = useState(false);
-
+const InputSecurityCode = ({helperVisibility, setHelperVisibility}) => {
     const inputOnFocusHandler = (event) => {
         event.target.classList.add('mp-focus');
         event.target.classList.remove('mp-error');

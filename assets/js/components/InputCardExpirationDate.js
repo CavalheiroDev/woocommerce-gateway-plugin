@@ -2,8 +2,7 @@ import InputLabel from "./InputLabel";
 import InputHelper from "./InputHelper";
 import {useState} from "@wordpress/element";
 
-const InputCardExpirationDate = ({inputLabelMessage, placeholder}) => {
-    const [helperVisibility, setHelperVisibility] = useState(false);
+const InputCardExpirationDate = ({inputLabelMessage, placeholder, helperVisibility, setHelperVisibility}) => {
     const [helperMessage, setHelperMessage] = useState('Dado obrigatório');
 
     const setExpirationDateMark = (event) => {

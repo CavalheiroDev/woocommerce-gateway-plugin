@@ -1,9 +1,8 @@
 import InputLabel from "./InputLabel";
 import InputHelper from "./InputHelper";
-import {useState} from "@wordpress/element";
 
-const InputHolderName = () => {
-    const [helperVisibility, setHelperVisibility] = useState(false);
+
+const InputHolderName = ({helperVisibility, setHelperVisibility}) => {
 
     const inputOnFocusHandler = (event) => {
         event.target.classList.add('mp-focus');

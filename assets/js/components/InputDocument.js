@@ -7,7 +7,6 @@ import CIValidator from "../validators/documents/CIValidator";
 
 const InputDocument = ({
                            labelMessage,
-                           helperMessage,
                            inputName,
                            hiddenId,
                            inputDataCheckout,
@@ -16,17 +15,14 @@ const InputDocument = ({
                            selectDataCheckout,
                            flagError,
                            documents,
-                           validate
+                           validate,
+                           helperVisibility,
+                           setHelperVisibility
                        }) => {
 
     const [documentInputMaxLengthState, setDocumentInputMaxLengthState] = useState(14);
     const [documentInputPlaceholderState, setDocumentInputPlaceholderState] = useState('999.999.999-99');
     const [documentInputNameState, setDocumentInputNameState] = useState(inputName);
-
-    const setHelperDisplay = (display) => {
-        const helper = document.getElementById('mp-doc-number-helper');
-        helper.style.display = display;
-    };
 
     const selectOnFocusHandler = (event) => {
         if (validate) {
@@ -34,7 +30,7 @@ const InputDocument = ({
             component.classList.add('mp-focus');
             component.classList.remove('mp-error');
 
-            setHelperDisplay('none');
+            setHelperVisibility(false);
         }
     };
 
@@ -43,7 +39,7 @@ const InputDocument = ({
             const component = document.getElementById('form-checkout__identificationNumber-container');
             component.classList.remove('mp-focus');
 
-            setHelperDisplay('none');
+            setHelperVisibility(false);
         }
     };
 
@@ -120,16 +116,15 @@ const InputDocument = ({
                 mpInput.classList.remove('mp-error');
                 mpInput.classList.remove('mp-focus');
 
-                setHelperDisplay('none');
+                setHelperVisibility(false);
                 setDocumentInputNameState(inputName);
             } else {
                 mpInput.classList.add('mp-error');
-                setHelperDisplay('flex');
+                setHelperVisibility(true);
                 setDocumentInputNameState(flagError);
             }
 
         }
-
 
 
     };
@@ -169,7 +164,7 @@ const InputDocument = ({
                 />
             </div>
             <input type={'hidden'} id={hiddenId}/>
-            <InputHelper isVisible={false} message={helperMessage} inputId={'mp-doc-number-helper'}/>
+            <InputHelper isVisible={helperVisibility} message={'Número de documento inválido'} inputId={'mp-doc-number-helper'}/>
         </div>
     );
 }

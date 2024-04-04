@@ -1,14 +1,6 @@
-import InputHelper from "./InputHelper";
 import InputRadio from "./InputRadio";
 
-const InputInstallments = ({
-                               totalAmount,
-                               totalInstallments,
-                               inputHelperMessage,
-                               inputHelperId,
-                               inputHelperIsVisible
-                           }) => {
-
+const InputInstallments = ({totalAmount, totalInstallments, setHelperVisibility}) => {
     const createInstallment = (radioName, radioValue, radioId, amount, installment) => {
         const formattedAmount = amount.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
 
@@ -20,6 +12,7 @@ const InputInstallments = ({
             if (installmentHidden) {
                 installmentHidden.value = installmentRadio.value
             }
+            setHelperVisibility(false);
         }
 
         const installmentDisplay = installment >= (totalInstallments / 2) ? 'none' : 'flex';

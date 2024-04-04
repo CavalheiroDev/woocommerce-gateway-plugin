@@ -140,7 +140,7 @@ class WC_Gateway_NixPay extends WC_Payment_Gateway
             'signature_group_slug' => array(
                 'title' => 'Slug da categoria de assinatura',
                 'type' => 'text',
-                'description' => 'Informe aqui o Slug da categoria de assinatura. Para informar o plano da recorrência, 
+                'description' => 'Informe aqui o Slug da categoria de assinatura. Para informar o plano da recorrência do Nix Empresas, 
                 é necessário criar uma tag com o nome do plano e associar aos seus produtos.',
             ),
             'production_api_user' => array(
