@@ -207,10 +207,15 @@ class CreditGateway extends Gateway {
 	public function get_blocks_params(): array {
 		global $woocommerce;
 
+		$total_cart_amount = 0;
+		if ( $woocommerce->cart ) {
+			$total_cart_amount = $woocommerce->cart->get_total( 'gateway' );
+		}
+
 		return [
 			'test_mode'          => $this->test_mode,
 			'total_installments' => $this->get_option( 'total_installments', 12 ),
-			'total_cart_amount'  => $woocommerce->cart->total,
+			'total_cart_amount'  => $total_cart_amount,
 		];
 
 	}
