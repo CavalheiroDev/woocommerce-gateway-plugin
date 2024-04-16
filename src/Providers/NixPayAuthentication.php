@@ -41,7 +41,7 @@ class NixPayAuthentication {
 
 		$response_body = wp_remote_retrieve_body( $response );
 
-		if ( wp_remote_retrieve_response_code( $response ) > 299 ) {
+		if ( wp_remote_retrieve_response_code( $response ) > 299 or ! $response_body ) {
 			$this->logger->error( $response_body );
 			throw new Exception( 'Ocorreu um erro no processamento do seu pagamento.' );
 		}

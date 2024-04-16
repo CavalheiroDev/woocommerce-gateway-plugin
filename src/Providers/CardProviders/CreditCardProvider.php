@@ -21,9 +21,9 @@ class CreditCardProvider extends Provider {
 		$response_body = wp_remote_retrieve_body( $response );
 		$status_code   = wp_remote_retrieve_response_code( $response );
 
-		error_log( $response_body );
+		$decoded_body = json_decode( $response_body, true );
 
-		if ( $status_code > 299 ) {
+		if ( $status_code > 299 or ! $response_body ) {
 			if ( ! empty( $decoded_body->errors )
 			     and $decoded_body->errors[0] == 'Data.Card.Number: The Number field is not a valid credit card number.' ) {
 				$this->logger->info( 'Invalid credit card number' );
@@ -34,7 +34,7 @@ class CreditCardProvider extends Provider {
 			throw new Exception( 'Ocorreu um erro no processamento do seu pagamento.' );
 		}
 
-		return json_decode( $response_body, true );
+		return $decoded_body;
 
 
 	}
