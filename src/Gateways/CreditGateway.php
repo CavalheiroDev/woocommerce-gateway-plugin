@@ -210,6 +210,10 @@ class CreditGateway extends Gateway {
 	private function has_recurrence_item_in_cart(): bool {
 		global $woocommerce;
 
+		if ( ! $woocommerce->cart ) {
+			return false;
+		}
+
 		$has_recurrence = false;
 
 		$cart_items = $woocommerce->cart->get_cart();
