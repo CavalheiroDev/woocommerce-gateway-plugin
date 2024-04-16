@@ -11,7 +11,7 @@ import InputInstallments from "../components/InputInstallments";
 import InputHolderName from "../components/InputHolderName";
 import InputSecurityCode from "../components/InputSecurityCode";
 
-const settings = getSetting('nixpay_data', {});
+const settings = getSetting('woo-nixpay-credit-gateway_data', {});
 
 const defaultLabel = decodeEntities(settings.title) || 'Cartão de Crédito';
 
@@ -201,7 +201,7 @@ const Label = (props) => {
  * NixPay payment method config object.
  */
 const nixPayPaymentMethod = {
-    name: "nixpay",
+    name: "woo-nixpay-credit-gateway",
     label: <Label/>,
     content: <Content/>,
     edit: <Content/>,

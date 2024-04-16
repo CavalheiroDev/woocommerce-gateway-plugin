@@ -22,12 +22,14 @@ fi
 npm run build
 
 cd $BASE_DIR
-cp -r assets build includes woocommerce-gateway-nixpay.php $TMP_DIR
+cp -r assets build src woocommerce-nixpay.php composer.json composer.lock $TMP_DIR
 
 if [ $? -ne 0 ]; then
 	echo "Error copying files"
 	exit 1
 fi
+
+cd $TMP_DIR/ && composer install --no-dev && composer dump-autoload -o && rm composer.*
 
 cd $TMP_DIR/.. && zip -rX woocommerce-nixpay.zip woocommerce-nixpay -x "**/.DS_Store" -x "*/.git/*"
 mv $TMP_DIR/../woocommerce-nixpay.zip $BASE_DIR && rm -rf $TMP_DIR

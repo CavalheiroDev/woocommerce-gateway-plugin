@@ -1,0 +1,16 @@
+{
+  "name": "nix/woocommerce-nixpay",
+  "type": "project",
+  "require": {},
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Nix\\WoocommerceNixpay\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}
