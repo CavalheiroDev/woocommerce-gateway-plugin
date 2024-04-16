@@ -78,7 +78,7 @@ const InputInstallments = ({hasRecurrence, totalAmount, totalInstallments, setHe
                 <input type={'hidden'}
                        name={'card-selected-installment-hidden'}
                        id={'card-selected-installment-hidden'}
-                       value={1}/>
+                />
 
             </div>
         </div>
