@@ -1043,7 +1043,7 @@ div .mp-error {
 }
 
 .mp-input-table-container-link {
-  display: flex !important;
+  display: flex;
   align-items: center !important;
   justify-content: center !important;
   padding: 16px 0 24px !important;

@@ -1,6 +1,10 @@
 import InputRadio from "./InputRadio";
 
-const InputInstallments = ({totalAmount, totalInstallments, setHelperVisibility}) => {
+const InputInstallments = ({hasRecurrence, totalAmount, totalInstallments, setHelperVisibility}) => {
+    if (hasRecurrence) {
+        totalInstallments = 1;
+    }
+
     const createInstallment = (radioName, radioValue, radioId, amount, installment) => {
         const formattedAmount = amount.toLocaleString('pt-br', {style: 'currency', currency: 'BRL'});
 
@@ -15,7 +19,7 @@ const InputInstallments = ({totalAmount, totalInstallments, setHelperVisibility}
             setHelperVisibility(false);
         }
 
-        const installmentDisplay = installment >= (totalInstallments / 2) ? 'none' : 'flex';
+        const installmentDisplay = installment > (totalInstallments / 2) && totalInstallments >= 6 ? 'none' : 'flex';
 
         return (
             <div className={'mp-input-table-item'} style={{display: installmentDisplay}}>
@@ -56,6 +60,9 @@ const InputInstallments = ({totalAmount, totalInstallments, setHelperVisibility}
         }
     }
 
+    const moreActionsDisplay = totalInstallments >= 6 ? 'flex' : 'none';
+
+
     return (
         <div id={'mp-checkout-custom-installments-container'} className={'mp-checkout-custom-installments-container'}>
             <div className={'mp-input-table-container'} data-cy={'input-table-container'}>
@@ -63,13 +70,15 @@ const InputInstallments = ({totalAmount, totalInstallments, setHelperVisibility}
 
                     {createInstallmentsList(totalAmount, totalInstallments)}
 
-                    <div className={'mp-input-table-container-link'} onClick={moreOptionsOnClickHandler}>
+                    <div className={'mp-input-table-container-link'} onClick={moreOptionsOnClickHandler}
+                         style={{display: moreActionsDisplay}}>
                         <a id={'more-options'} className={'mp-input-table-link'}>Mais opções</a>
                     </div>
                 </div>
                 <input type={'hidden'}
                        name={'card-selected-installment-hidden'}
-                       id={'card-selected-installment-hidden'}/>
+                       id={'card-selected-installment-hidden'}
+                       value={1}/>
 
             </div>
         </div>

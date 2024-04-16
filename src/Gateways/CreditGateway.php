@@ -64,8 +64,8 @@ class CreditGateway extends Gateway {
 			'signature_group_slug'    => [
 				'title'       => 'Slug da categoria de assinatura',
 				'type'        => 'text',
-				'description' => 'Informe aqui o Slug da categoria de assinatura. Para informar o plano da recorrência do Nix Empresas, 
-                é necessário criar uma tag com o nome do plano e associar aos seus produtos.',
+				'description' => 'Informe aqui o Slug da sua categoria de assinatura. 
+				Todos os produtos com cobrança recorrente devem estar dentro dessa categoria.',
 			],
 			'recurrence_default_plan' => [
 				'title'       => 'Nome do plano no Nix Empresas.',
@@ -187,7 +187,10 @@ class CreditGateway extends Gateway {
 		];
 
 		foreach ( $order->get_items() as $item_id => $item ) {
-			$item_amount = number_format( $item->get_data()['total'] * 100.0, 0, '.', '' );
+			$product        = $item->get_product();
+			$product_amount = $product->get_price();
+
+			$item_amount = number_format( $product_amount * 100.0, 0, '.', '' );
 
 
 			$recurrence_item = [
@@ -204,6 +207,23 @@ class CreditGateway extends Gateway {
 		return $payload;
 	}
 
+	private function has_recurrence_item_in_cart(): bool {
+		global $woocommerce;
+
+		$has_recurrence = false;
+
+		$cart_items = $woocommerce->cart->get_cart();
+		foreach ( $cart_items as $cart_item => $values ) {
+			$has_recurrence = $this->has_recurrence_product( $values['data']->get_id() );
+			if ( $has_recurrence ) {
+				break;
+			}
+
+		}
+
+		return $has_recurrence;
+	}
+
 	public function get_blocks_params(): array {
 		global $woocommerce;
 
@@ -216,6 +236,7 @@ class CreditGateway extends Gateway {
 			'test_mode'          => $this->test_mode,
 			'total_installments' => $this->get_option( 'total_installments', 12 ),
 			'total_cart_amount'  => $total_cart_amount,
+			'has_recurrence'     => $this->has_recurrence_item_in_cart()
 		];
 
 	}

@@ -20,6 +20,7 @@ const Content = (props) => {
         test_mode,
         total_installments,
         total_cart_amount,
+        has_recurrence,
     } = settings.params;
 
     const {eventRegistration, emitResponse} = props;
@@ -168,9 +169,11 @@ const Content = (props) => {
                                  style={{display: 'block'}}>
                                 <p className={'mp-checkout-custom-card-form-title'}>Escolha o número de parcelas</p>
 
-                                <InputInstallments totalAmount={total_cart_amount}
-                                                   totalInstallments={total_installments}
-                                                   setHelperVisibility={setInstallmentsHelperVisibility}
+                                <InputInstallments
+                                    hasRecurrence={has_recurrence}
+                                    totalAmount={total_cart_amount}
+                                    totalInstallments={total_installments}
+                                    setHelperVisibility={setInstallmentsHelperVisibility}
                                 />
 
                                 <InputHelper
