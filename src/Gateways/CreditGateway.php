@@ -124,9 +124,10 @@ class CreditGateway extends Gateway {
 
 	public function payment_payload( WC_Order $order, int $amount ): array {
 		$zip_code = str_replace( '-', '', $order->get_billing_postcode() );
+		$uuid = wp_generate_uuid4();
 
 		return array(
-			'merchantOrderId' => "woocommerceOrder-{$order->get_id()}",
+			'merchantOrderId' => "woocommerceOrder-{$order->get_id()}-{$uuid}",
 			'transactionType' => 1,
 			'callbackUrl'     => $this->site_url,
 			'returnUrl'       => $this->site_url,
