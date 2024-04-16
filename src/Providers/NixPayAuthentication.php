@@ -25,19 +25,7 @@ class NixPayAuthentication {
 	 * @throws Exception
 	 */
 	public function perform_authenticate(): string {
-		$payload = wp_json_encode( [
-			'user'     => $this->username,
-			'password' => $this->password
-		] );
-
-		$options = [
-			'body'    => $payload,
-			'headers' => [
-				'Content-Type' => 'application/json',
-			]
-		];
-
-		$response = wp_remote_post( $this->authentication_url, $options );
+		$response = $this->authenticate();
 
 		$response_body = wp_remote_retrieve_body( $response );
 
@@ -50,6 +38,24 @@ class NixPayAuthentication {
 		$this->logger->info( 'Authenticated with success.' );
 
 		return $decoded_body->access_token;
+
+	}
+
+	public function authenticate(): array {
+		$payload = wp_json_encode( [
+			'user'     => $this->username,
+			'password' => $this->password,
+			'timeout'  => 30
+		] );
+
+		$options = [
+			'body'    => $payload,
+			'headers' => [
+				'Content-Type' => 'application/json',
+			]
+		];
+
+		return wp_remote_post( $this->authentication_url, $options );
 
 	}
 

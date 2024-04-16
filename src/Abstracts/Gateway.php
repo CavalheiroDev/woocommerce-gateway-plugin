@@ -2,7 +2,9 @@
 
 namespace Nix\WoocommerceNixpay\Abstracts;
 
+use Nix\WoocommerceNixpay\Providers\NixPayAuthentication;
 use Nix\WoocommerceNixpay\Utils\Logger;
+use WC_Admin_Settings;
 use WC_Order;
 use WC_Order_Item;
 use WC_Payment_Gateway;
@@ -87,20 +89,58 @@ abstract class Gateway extends WC_Payment_Gateway {
 	}
 
 	public function get_authentication_url(): string {
-		if ( $this->test_mode ) {
-			return $this->sandbox_base_url . '/nix/cadun/empresas/auth';
-		}
-
-		return $this->production_base_url . '/nix/cadun/empresas/auth';
-
+		return $this->get_base_url() . '/nix/cadun/empresas/auth';
 	}
 
 	public function get_gateway_url(): string {
+		return $this->get_base_url() . $this::GATEWAY_ENDPOINT;
+	}
+
+	public function get_base_url(): string {
 		if ( $this->test_mode ) {
-			return $this->sandbox_base_url . $this::GATEWAY_ENDPOINT;
+			return $this->sandbox_base_url;
+		} else {
+			return $this->production_base_url;
+		}
+	}
+
+	public function validate_test_api_password_field( $key, $value ) {
+		if ( ! $this->test_mode ) {
+			return $value;
 		}
 
-		return $this->production_base_url . $this::GATEWAY_ENDPOINT;
+		$nix_pay_authentication = new NixPayAuthentication(
+			authentication_url: $this->get_authentication_url(),
+			username: $this->get_api_user(),
+			password: $this->get_api_password()
+		);
+
+		$response = $nix_pay_authentication->authenticate();
+		if ( wp_remote_retrieve_response_code( $response ) > 299 or ! wp_remote_retrieve_body( $response ) ) {
+			WC_Admin_Settings::add_error( 'Usuário ou senha de testes incorretos.' );
+		}
+
+		return $value;
+
+	}
+
+	public function validate_production_api_password_field( $key, $value ) {
+		if ( $this->test_mode ) {
+			return $value;
+		}
+
+		$nix_pay_authentication = new NixPayAuthentication(
+			authentication_url: $this->get_authentication_url(),
+			username: $this->get_api_user(),
+			password: $this->get_api_password()
+		);
+
+		$response = $nix_pay_authentication->authenticate();
+		if ( wp_remote_retrieve_response_code( $response ) > 299 or ! wp_remote_retrieve_body( $response ) ) {
+			WC_Admin_Settings::add_error( 'Usuário ou senha de produção incorretos.' );
+		}
+
+		return $value;
 
 	}
 

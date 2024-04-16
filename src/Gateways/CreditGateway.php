@@ -85,6 +85,20 @@ class CreditGateway extends Gateway {
 
 	}
 
+	public function validate_signature_group_slug_field( $key, $value ) {
+		if ( $value == '' or $value == null ) {
+			return $value;
+		}
+
+		$category = get_term_by( 'slug', $value, 'product_cat' );
+		if ( ! $category ) {
+			WC_Admin_Settings::add_error( 'Categoria informada não existe.' );
+		}
+
+		return $value;
+
+	}
+
 	/**
 	 * @throws Exception
 	 */

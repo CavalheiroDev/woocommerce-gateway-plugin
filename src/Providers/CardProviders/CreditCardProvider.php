@@ -14,6 +14,7 @@ class CreditCardProvider extends Provider {
 		$options = [
 			'body'    => $payload,
 			'headers' => $this->get_headers(),
+			'timeout' => 30
 		];
 
 		$response = wp_remote_post( $this->payment_url, $options );
