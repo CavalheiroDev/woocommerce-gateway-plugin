@@ -151,8 +151,6 @@ class CreditGateway extends Gateway {
 
 		$encoded_payload = wp_json_encode( $payload, JSON_UNESCAPED_SLASHES );
 
-		$this->logger->debug( $encoded_payload );
-
 		$response      = $this->provider->create_payment( $encoded_payload );
 		$payment_token = $response['payment']['paymentToken'];
 
