@@ -112,7 +112,7 @@ abstract class Gateway extends WC_Payment_Gateway {
 		$nix_pay_authentication = new NixPayAuthentication(
 			authentication_url: $this->get_authentication_url(),
 			username: $this->get_api_user(),
-			password: $this->get_api_password()
+			password: $value
 		);
 
 		$response = $nix_pay_authentication->authenticate();
@@ -132,7 +132,7 @@ abstract class Gateway extends WC_Payment_Gateway {
 		$nix_pay_authentication = new NixPayAuthentication(
 			authentication_url: $this->get_authentication_url(),
 			username: $this->get_api_user(),
-			password: $this->get_api_password()
+			password: $value
 		);
 
 		$response = $nix_pay_authentication->authenticate();
