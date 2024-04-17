@@ -173,7 +173,7 @@ class CreditGateway extends Gateway {
 		$uuid     = wp_generate_uuid4();
 
 		return array(
-			'merchantOrderId' => "$uuid-{$order->get_id()}",
+			'merchantOrderId' => "$uuid={$order->get_id()}",
 			'transactionType' => 1,
 			'callbackUrl'     => $this->site_url,
 			'returnUrl'       => $this->site_url,

@@ -16,7 +16,7 @@ class CreditGatewayWebhook extends Webhook {
 			return;
 		}
 
-		$order_id = explode( '-', $body["merchantOrderId"] )[1];
+		$order_id = explode( '=', $body["merchantOrderId"] )[1];
 
 		$order = wc_get_order( $order_id );
 		if ( ! $order ) {
