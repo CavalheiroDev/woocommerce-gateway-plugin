@@ -5,6 +5,7 @@ namespace Nix\WoocommerceNixpay\Gateways;
 use Exception;
 use Nix\WoocommerceNixpay\Abstracts\Gateway;
 use Nix\WoocommerceNixpay\Providers\CardProviders\CreditCardProvider;
+use Nix\WoocommerceNixpay\Providers\Establishment\EstablishmentProvider;
 use WC_Admin_Settings;
 use WC_Order;
 
@@ -34,7 +35,7 @@ class CreditGateway extends Gateway {
 
 		$this->site_url = home_url( '/wc-api/nix_credit_gateway_webhook' );
 		$this->provider = new CreditCardProvider(
-			payment_url: $this->get_gateway_url(),
+			base_url: $this->get_base_url(),
 			authentication_url: $this->get_authentication_url(),
 			username: $this->get_api_user(),
 			password: $this->get_api_password()
@@ -56,10 +57,10 @@ class CreditGateway extends Gateway {
 				'type'              => 'number',
 				'description'       => 'Informe aqui o numero de parcelas que deseja oferecer em sua loja',
 				'default'           => 12,
-				'custom_attributes' => array(
+				'custom_attributes' => [
 					'min' => 1,
 					'max' => 12
-				)
+				]
 			],
 			'signature_group_slug'    => [
 				'title'       => 'Slug da categoria de assinatura',
@@ -68,9 +69,9 @@ class CreditGateway extends Gateway {
 				Todos os produtos com cobrança recorrente devem estar dentro dessa categoria.',
 			],
 			'recurrence_default_plan' => [
-				'title'       => 'Nome do plano no Nix Empresas.',
+				'title'       => 'Nome do plano zerado do Nix Empresas.',
 				'type'        => 'text',
-				'description' => ''
+				'description' => 'Plano de recorrência zerado do Nix Empresas. Crie em Mais Opções > Gestão de Assinaturas > Planos.'
 			]
 		];
 	}
@@ -82,7 +83,6 @@ class CreditGateway extends Gateway {
 		}
 
 		return $value;
-
 	}
 
 	public function validate_signature_group_slug_field( $key, $value ) {
@@ -96,7 +96,41 @@ class CreditGateway extends Gateway {
 		}
 
 		return $value;
+	}
 
+	/**
+	 * @throws Exception
+	 */
+	public function validate_recurrence_default_plan_field( $key, $value ) {
+		$establishment_provider = new EstablishmentProvider(
+			base_url: $this->get_base_url(),
+			authentication_url: $this->get_authentication_url(),
+			username: $this->get_api_user(),
+			password: $this->get_api_password()
+		);
+
+		$response_body = $establishment_provider->get_plans();
+
+		$has_plan = false;
+		foreach ( $response_body as $plan ) {
+			$plan_name = $plan['name'];
+			if ( $plan_name == $value ) {
+				$has_plan    = true;
+				$plan_amount = (int) $plan['amount'];
+
+				if ( $plan_amount > 0 ) {
+					WC_Admin_Settings::add_error( 'Plano informado invalido.' );
+				}
+				break;
+
+			}
+		}
+
+		if ( ! $has_plan ) {
+			WC_Admin_Settings::add_error( 'O plano informado não existe.' );
+		}
+
+		return $value;
 	}
 
 	/**

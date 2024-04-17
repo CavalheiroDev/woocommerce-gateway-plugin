@@ -6,18 +6,21 @@ use Exception;
 use Nix\WoocommerceNixpay\Abstracts\Provider;
 
 class CreditCardProvider extends Provider {
+	protected string $path = 'nix-pay/v2/Orders/CardPayments';
 
 	/**
 	 * @throws Exception
 	 */
 	public function create_payment( string $payload ): array {
+		$url = $this->get_url( [ 'Authorize' ] );
+
 		$options = [
 			'body'    => $payload,
 			'headers' => $this->get_headers(),
 			'timeout' => 30
 		];
 
-		$response = wp_remote_post( $this->payment_url, $options );
+		$response = wp_remote_post( $url, $options );
 
 		$response_body = wp_remote_retrieve_body( $response );
 		$status_code   = wp_remote_retrieve_response_code( $response );

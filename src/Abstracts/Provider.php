@@ -7,12 +7,13 @@ use Nix\WoocommerceNixpay\Providers\NixPayAuthentication;
 use Nix\WoocommerceNixpay\Utils\Logger;
 
 abstract class Provider {
-	protected string $payment_url;
+	protected string $base_url;
+	protected string $path;
 	protected NixPayAuthentication $authentication_provider;
 	protected Logger $logger;
 
-	public function __construct( string $payment_url, string $authentication_url, string $username, string $password ) {
-		$this->payment_url             = $payment_url;
+	public function __construct( string $base_url, string $authentication_url, string $username, string $password ) {
+		$this->base_url                = $base_url;
 		$this->authentication_provider = new NixPayAuthentication( $authentication_url, $username, $password );
 
 		$this->logger = new Logger();
@@ -31,5 +32,14 @@ abstract class Provider {
 
 	}
 
-	abstract function create_payment( string $payload ): array;
+	protected function get_url( array $args = [] ): string {
+		$formatted_args = array_map( function ( $arg ) {
+			return strval( $arg );
+		}, $args );
+
+		$args_ = '/' . implode( '/', $formatted_args );
+
+		return "{$this->base_url}/{$this->path}{$args_}";
+	}
+
 }
