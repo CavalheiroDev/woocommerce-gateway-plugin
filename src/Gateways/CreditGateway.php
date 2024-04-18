@@ -126,7 +126,7 @@ class CreditGateway extends Gateway {
 			}
 		}
 
-		if ( ! $has_plan ) {
+		if ( ! $has_plan and $response_body ) {
 			WC_Admin_Settings::add_error( 'O plano informado não existe.' );
 		}
 
